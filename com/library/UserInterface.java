@@ -8,7 +8,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class UserInterface extends Frame implements KeyListener {
-
     Frame frame;
     TextField input;
     Label output;
@@ -16,6 +15,7 @@ public class UserInterface extends Frame implements KeyListener {
     byte[] imageData;
     ImageIcon theOutputImage;
     JLabel label = new JLabel();
+    Font verFont =new Font("Verdana",Font.BOLD,18);
 
     public void paint(Graphics g){
         g.drawRect(50,200,100,100);
@@ -27,12 +27,15 @@ public class UserInterface extends Frame implements KeyListener {
 
         frame.setSize(700,550);
         input.setBounds(450,100,100,30);
-        //frame.setBackground(Color.);
-        input.setFont(new Font("Verdana",Font.PLAIN,18));
+        frame.setBackground(new Color(71, 87, 75));
+        input.setBackground(new Color(70, 100, 80));
+        input.setForeground(new Color(134, 155, 68));
+        input.setFont(new Font("Verdana",Font.TRUETYPE_FONT,17));
         output.setBounds(450,300,200,30);
         frame.add(input);
         frame.add(output);
 
+        output.setFont(verFont);
         try{
 
             frame.addWindowListener(new WindowAdapter() {
@@ -62,6 +65,7 @@ public class UserInterface extends Frame implements KeyListener {
         LibraryId=input.getText();
         imageData =null;
         if(e.getKeyCode()==KeyEvent.VK_ENTER){
+            System.out.println("Passing ID to LibDataBase");
             String Name=LibDataBase.fetch(LibraryId);
             String empty="Error";
             if(!empty.equals(Name)){
@@ -69,23 +73,26 @@ public class UserInterface extends Frame implements KeyListener {
                 DisplayOutput(Name, imageData);
             }
             else {
-                output.setForeground(Color.RED);
-                output.setText(Name);
+                label.setIcon(null);
+                String ErrorMessage="ID not found ";
+                output.setForeground(new Color(210, 15, 15, 185));
+                output.setText(ErrorMessage);
+                label.setText("INVALID ID  Enter proper ID ");
             }
         }
     }
-
-    private void DisplayOutput(String OutputName, byte[] outputImage) {
+    private void DisplayOutput(String OutputName, byte[] ImageByteData) {
         label.setBounds(80,30,250,250);
+        Image img=Toolkit.getDefaultToolkit().createImage(ImageByteData);
         output.setText(OutputName);
         try{
-            Image img=Toolkit.getDefaultToolkit().createImage(outputImage);
-            theOutputImage =new ImageIcon(img);
 
-            output.setForeground(Color.GREEN);
+            theOutputImage =new ImageIcon(img);
+            output.setForeground(new Color(238, 233, 219));
+
+            label.setIcon(null);
             label.setIcon(theOutputImage);
             frame.add(label);
-            System.out.println("Image part Executed ");
         }
         catch (Exception e){
             e.printStackTrace();
